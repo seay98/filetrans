@@ -1,0 +1,123 @@
+﻿<Window x:Class="FileTranWin.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="文件传输" Height="350" Width="525" SizeToContent="Width" WindowStartupLocation="CenterScreen" Icon="/FileTranWin;component/move.ico">
+
+    <!--布局配置-->
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="26" />
+            <RowDefinition/>
+            <RowDefinition Height="3" />
+            <RowDefinition/>
+            <RowDefinition Height="6" />
+        </Grid.RowDefinitions>
+
+        <!--工具栏-->
+        <ToolBar Height="26" Name="toolBar" Margin="0" >
+            <Button Name="ButtonStartSend" Click="ButtonStart_Click">开始发送</Button>
+            <Separator></Separator>
+            <Button Name="ButtonStartReceive" Click="ButtonStartReceive_Click" IsEnabled="False">启动文件接收服务</Button>
+            <Separator></Separator>
+            <Button Name="ButtonSaveSets" Click="ButtonSaveSets_Click">保存当前配置</Button>
+        </ToolBar>
+        
+        <!--发送配置显示-->
+        <DataGrid AutoGenerateColumns="False" Name="gridSets" SelectionMode="Single" Grid.Row="1" IsSynchronizedWithCurrentItem="True">
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="添加"></MenuItem>
+                    <MenuItem Header="删除"></MenuItem>
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Path=Status, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  Header="状态" />
+                <DataGridCheckBoxColumn Binding="{Binding Path=BeRun, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="是否运行" />
+
+                <!--<DataGridTextColumn Binding="{Binding Path=Source}" Header="源数据目录" />-->
+                <DataGridTemplateColumn Header="源数据目录"  >
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Name="textBlockSource" Text="{Binding Path=Source, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <WrapPanel>
+                                <TextBox Name="textBoxSelPath" Text="{Binding Path=Source, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                                <Button Name="buttonSelPath" Width="Auto" HorizontalAlignment="Right" VerticalAlignment="Center" Click="buttonSelPath_Click">...</Button>
+                            </WrapPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridCheckBoxColumn Binding="{Binding Path=AllDirectories, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="是否遍历子目录" />
+                <DataGridTextColumn Binding="{Binding Path=Server, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="目标服务器" />
+                <DataGridTextColumn Binding="{Binding Path=Port, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="目的端口" />
+
+                <!--<DataGridTextColumn Binding="{Binding Path=Dest, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="目的目录" />-->
+                <DataGridTemplateColumn Header="目的目录"  >
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Name="textBlockDest" Text="{Binding Path=Dest, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <WrapPanel>
+                                <TextBox Name="textBoxSelDestPath" Text="{Binding Path=Dest, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                                <Button Name="buttonSelDestPath" Width="Auto" HorizontalAlignment="Right" VerticalAlignment="Center" Click="buttonSelDestPath_Click">...</Button>
+                            </WrapPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
+                
+                <DataGridTextColumn Binding="{Binding Path=FileType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="文件类型" />
+                <DataGridCheckBoxColumn Binding="{Binding Path=BeBack, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="是否备份" />
+                
+                <!--<DataGridTextColumn Binding="{Binding Path=BackPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="备份目录" />-->
+                <DataGridTemplateColumn Header="备份目录"  >
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Name="textBlockBackPath" Text="{Binding Path=BackPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <WrapPanel>
+                                <TextBox Name="textBoxSelBackPath" Text="{Binding Path=BackPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                                <Button Name="buttonSelBackPath" Width="Auto" HorizontalAlignment="Right" VerticalAlignment="Center" Click="buttonSelBackPath_Click">...</Button>
+                            </WrapPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+            
+            <DataGrid.RowDetailsTemplate>
+                <DataTemplate>
+                    <Border Margin="2" Padding="5" BorderBrush="SteelBlue" BorderThickness="1" CornerRadius="3">
+                        <TextBlock Text="{Binding Path=Desc, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" FontSize="10"></TextBlock>
+                    </Border>
+                </DataTemplate>
+            </DataGrid.RowDetailsTemplate>
+        </DataGrid>
+
+        <!--分割线-->
+        <GridSplitter Grid.Row="2" Name="gridSplitter1" HorizontalAlignment="Stretch" />
+
+        <!--接收配置显示-->
+        <DataGrid Grid.Row="3" Name="gridReceiveSets" AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Path=Status}" Header="状态" />
+                <DataGridCheckBoxColumn Binding="{Binding Path=BeRun}" Header="是否运行" />
+                <DataGridTextColumn Binding="{Binding Path=RecDir}" Header="接收目录" />
+                <DataGridCheckBoxColumn Binding="{Binding Path=RecSme}" Header="是否接收同名文件" />
+                <DataGridTextColumn Binding="{Binding Path=LstPort}" Header="监听端口" />
+                <DataGridTextColumn Binding="{Binding Path=Desc}" Header="描述" />
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!--心跳进度条显示-->
+        <ProgressBar Grid.Row="4" Name="progressBar" IsIndeterminate="True" />
+    </Grid>
+</Window>
